@@ -1,0 +1,16 @@
+# https://taskfile.dev
+
+version: "3"
+
+tasks:
+  list-tables:
+    cmds:
+      - docker compose exec aws awslocal dynamodb list-tables
+
+  setup:
+    cmds:
+      - docker compose exec aws npx cdklocal bootstrap
+
+  deploy:
+    cmds:
+      - docker compose exec aws sh ./deploy.sh

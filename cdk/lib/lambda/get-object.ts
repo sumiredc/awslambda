@@ -1,0 +1,43 @@
+import { S3 } from "aws-sdk";
+import { Handler } from "aws-lambda";
+import { APIGatewayProxyEvent, APIGatewayProxyResult } from "aws-lambda";
+
+const config: S3.ClientConfiguration = {
+  endpoint: "http://s3:9000",
+  s3ForcePathStyle: true,
+  signatureVersion: "v4",
+  credentials: {
+    accessKeyId: "admin",
+    secretAccessKey: "password",
+  },
+};
+
+// GetObject
+export const handler: Handler = async (
+  _: APIGatewayProxyEvent
+): Promise<APIGatewayProxyResult> => {
+  const s3 = new S3(config);
+  const params = {
+    Bucket: "mybucket",
+    Key: "laptop.png",
+  };
+
+  try {
+    const res = await s3.getObject(params).promise();
+    const base64Image =
+      res.Body instanceof Buffer ? res.Body.toString("base64") : "";
+
+    return {
+      statusCode: 200,
+      headers: { "Content-Type": "image/png" },
+      body: base64Image,
+      isBase64Encoded: true,
+    };
+  } catch (error) {
+    console.error(error);
+    return {
+      statusCode: 500,
+      body: "Internal Server Error",
+    };
+  }
+};

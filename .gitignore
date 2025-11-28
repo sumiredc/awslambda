@@ -1,0 +1,6 @@
+volume
+cdk.out
+node_modules
+.env
+s3/data
+dynamodb/data
