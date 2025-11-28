@@ -3,13 +3,9 @@ import { Handler } from "aws-lambda";
 import { APIGatewayProxyEvent, APIGatewayProxyResult } from "aws-lambda";
 
 const config: S3.ClientConfiguration = {
-  endpoint: "http://s3:9000",
+  endpoint: "http://aws:4566",
   s3ForcePathStyle: true,
   signatureVersion: "v4",
-  credentials: {
-    accessKeyId: "admin",
-    secretAccessKey: "password",
-  },
 };
 
 // GetObject
@@ -18,7 +14,7 @@ export const handler: Handler = async (
 ): Promise<APIGatewayProxyResult> => {
   const s3 = new S3(config);
   const params = {
-    Bucket: "mybucket",
+    Bucket: "sample-bucket",
     Key: "laptop.png",
   };
 

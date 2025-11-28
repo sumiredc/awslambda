@@ -1,9 +1,9 @@
 import { AttributeType, BillingMode, Table } from "aws-cdk-lib/aws-dynamodb";
-import * as cdk from "aws-cdk-lib/core";
+import { RemovalPolicy, Stack, StackProps } from "aws-cdk-lib/core";
 import { Construct } from "constructs";
 
-export class DynamoDBStack extends cdk.Stack {
-  constructor(scope: Construct, id: string, props?: cdk.StackProps) {
+export class DynamoDBStack extends Stack {
+  constructor(scope: Construct, id: string, props?: StackProps) {
     super(scope, id, props);
 
     new Table(this, "UserTable", {
@@ -21,7 +21,7 @@ export class DynamoDBStack extends cdk.Stack {
       },
       billingMode: BillingMode.PAY_PER_REQUEST, // オンデマンド請求
       timeToLiveAttribute: "expired", // TTLの設定
-      removalPolicy: cdk.RemovalPolicy.DESTROY, // cdk destroyでDB削除可
+      removalPolicy: RemovalPolicy.DESTROY, // cdk destroyでDB削除可
     });
   }
 }

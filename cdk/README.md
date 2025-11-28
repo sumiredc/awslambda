@@ -167,4 +167,4 @@ awslocal dynamodb list-tables
 
 
 awslocal apigateway get-rest-apis --endpoint-url=http://localhost:4566 
-awslocal apigateway get-resources --rest-api-id kiwefwlzpv --endpoint-url=http://localhost:4566
+awslocal apigateway get-resources --rest-api-id okofh7uq1d --endpoint-url=http://localhost:4566
