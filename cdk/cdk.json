@@ -99,7 +99,8 @@
     "@aws-cdk/aws-lambda:useCdkManagedLogGroup": true,
     
     "local": {
-      "env": "local"
+      "env": "local",
+      "bucketName": "sample-bucket"
     }
   }
 }
