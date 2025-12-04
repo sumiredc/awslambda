@@ -4,6 +4,7 @@ import { LambdaIntegration, RestApi } from "aws-cdk-lib/aws-apigateway";
 import { Runtime } from "aws-cdk-lib/aws-lambda";
 import { NodejsFunction } from "aws-cdk-lib/aws-lambda-nodejs";
 import * as path from "path";
+import { AppEnv } from "../bin/env";
 
 // Node 20.x の Lambda 用 handler
 function runtimeNode20(
@@ -16,12 +17,16 @@ function runtimeNode20(
     runtime: Runtime.NODEJS_20_X,
     handler: handlerName,
     entry: path.join(__dirname, filepath),
+    environment: stack.appEnv,
   });
 }
 
 export class APIGatewayStack extends Stack {
-  constructor(scope: Construct, id: string, props?: StackProps) {
+  public readonly appEnv: AppEnv;
+
+  constructor(scope: Construct, id: string, props: StackProps, appEnv: AppEnv) {
     super(scope, id, props);
+    this.appEnv = appEnv;
 
     // API Gateway
     const api = new RestApi(this, "SampleAPI", {
@@ -59,6 +64,16 @@ export class APIGatewayStack extends Stack {
         "POST",
         new LambdaIntegration(
           runtimeNode20(this, "CreateUserFunction", "lambda/create-user.ts")
+        )
+      );
+
+    // Send Mail
+    api.root
+      .addResource("send-mail")
+      .addMethod(
+        "POST",
+        new LambdaIntegration(
+          runtimeNode20(this, "SendMailFunction", "lambda/send-mail.ts")
         )
       );
   }

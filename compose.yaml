@@ -1,6 +1,7 @@
 services:
   aws:
-    image: localstack/localstack
+    image: localstack/localstack:4.11.1
+    working_dir: /opt/code/cdk
     ports:
       - 4566:4566
       - 4510-4559:4510-4559
@@ -8,8 +9,18 @@ services:
       - DEBUG=1
       - DOCKER_HOST=unix:///var/run/docker.sock
       - LAMBDA_EXECUTOR=docker
+      - SMTP_HOST=mailhog:1025
+      - PROVIDER_OVERRIDE_SES=smtp
     volumes:
       - "./volume:/var/lib/localstack"
       - "/var/run/docker.sock:/var/run/docker.sock"
       - "./cdk:/opt/code/cdk"
-    working_dir: /opt/code/cdk
+    depends_on: 
+      - mailhog
+
+  mailhog:
+    image: mailhog/mailhog
+    platform: linux/amd64
+    ports:
+      - 1025:1025
+      - 8025:8025

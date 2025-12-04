@@ -1,17 +1,16 @@
 import { App } from "aws-cdk-lib";
 
-export interface AppEnv {
-  env: string;
-  bucketName: string;
+interface StringValues {
+  [key: string]: string;
+}
+
+export interface AppEnv extends StringValues {
+  BUCKET_NAME: string;
+  SENDER_EMAIL: string;
 }
 
 export function getAppEnv(app: App): AppEnv {
-  const key = app.node.tryGetContext("env");
-  if (!key) {
-    throw new Error("Context not found: env key");
-  }
-
-  const vals = app.node.tryGetContext(key);
+  const vals = app.node.tryGetContext("localEnv");
   if (!vals) {
     throw new Error("Context not found: env vals");
   }

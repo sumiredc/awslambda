@@ -8,7 +8,7 @@ export class S3Stack extends Stack {
     super(scope, id, props);
 
     new Bucket(this, "CreateBucket", {
-      bucketName: appEnv.bucketName,
+      bucketName: appEnv.BUCKET_NAME,
       versioned: true,
     });
   }

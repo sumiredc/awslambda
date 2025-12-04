@@ -14,3 +14,12 @@ tasks:
   deploy:
     cmds:
       - docker compose exec aws sh ./deploy.sh
+
+  ses-verify:
+    cmds:
+      - docker compose exec aws awslocal ses verify-email-identity --email-address "sender@example.com"
+      - docker compose exec aws awslocal ses verify-email-identity --email-address "receiver@example.com"
+
+  ses-list:
+    cmds:
+      - docker compose exec aws awslocal ses list-identities

@@ -93,7 +93,7 @@
     "@aws-cdk/aws-s3:publicAccessBlockedByDefault": true,
     "@aws-cdk/aws-lambda:useCdkManagedLogGroup": true,
 
-    "local": {
+    "localEnv": {
       "ENV": "local",
       "BUCKET_NAME": "sample-bucket",
       "SENDER_EMAIL": "sender@example.com"
