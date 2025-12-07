@@ -7,6 +7,12 @@ interface StringValues {
 export interface AppEnv extends StringValues {
   BUCKET_NAME: string;
   SENDER_EMAIL: string;
+  AWS_ENDPOINT: string;
+  OPENSEARCH_ENDPOINT: string;
+  MAIL_HOST: string;
+  MAIL_PORT: string;
+  MAIL_AUTH_USER: string;
+  MAIL_AUTH_PASSWORD: string;
 }
 
 export function getAppEnv(app: App): AppEnv {

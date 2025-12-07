@@ -7,12 +7,12 @@ export const handler: Handler = async (
   _: APIGatewayProxyEvent
 ): Promise<APIGatewayProxyResult> => {
   const transporter = createTransport({
-    host: "mailhog",
-    port: 1025,
+    host: process.env.MAIL_HOST,
+    port: Number(process.env.MAIL_PORT),
     secure: false,
     auth: {
-      user: "user",
-      pass: "password",
+      user: process.env.MAIL_AUTH_USER,
+      pass: process.env.MAIL_AUTH_PASSWORD,
     },
   });
 

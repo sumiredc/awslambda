@@ -3,7 +3,7 @@ import { Handler } from "aws-lambda";
 import { APIGatewayProxyEvent, APIGatewayProxyResult } from "aws-lambda";
 
 const config: S3.ClientConfiguration = {
-  endpoint: "http://aws:4566",
+  endpoint: process.env.AWS_ENDPOINT,
   s3ForcePathStyle: true,
   signatureVersion: "v4",
 };
@@ -14,7 +14,7 @@ export const handler: Handler = async (
 ): Promise<APIGatewayProxyResult> => {
   const s3 = new S3(config);
   const params = {
-    Bucket: "sample-bucket",
+    Bucket: process.env.BUCKET_NAME,
     Key: "laptop.png",
   };
 

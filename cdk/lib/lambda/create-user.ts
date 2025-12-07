@@ -19,14 +19,12 @@ interface User {
   name: string;
 }
 
-const OPENSEARCH_INDEX_NAME = "users";
-const OPENSEARCH_ENDPOINT =
-  "http://opensearchstack-sample19a77b.us-east-1.opensearch.localhost.localstack.cloud:4566";
-
 // CreateUser
 export const handler: Handler = async (
   _: APIGatewayProxyEvent
 ): Promise<APIGatewayProxyResult> => {
+  const OPENSEARCH_INDEX_NAME = "users";
+
   const user: User = {
     id: uuidv4(),
     name: randomName(),
@@ -55,7 +53,7 @@ export const handler: Handler = async (
   }
 
   const osClient = new Client({
-    node: OPENSEARCH_ENDPOINT, // OpenSearchのURL
+    node: process.env.OPENSEARCH_ENDPOINT,
   });
 
   // OpenSearch 登録
