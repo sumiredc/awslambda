@@ -26,6 +26,7 @@
     "@aws-cdk/toolkit-lib": "^1.11.0",
     "@aws-sdk/client-dynamodb": "^3.940.0",
     "@aws-sdk/client-ses": "^3.940.0",
+    "@opensearch-project/opensearch": "^3.5.1",
     "@types/nodemailer": "^7.0.4",
     "aws-cdk-lib": "2.215.0",
     "aws-sdk": "^2.1692.0",
