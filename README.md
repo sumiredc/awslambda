@@ -12,3 +12,8 @@ curl -X GET http://opensearchstack-sample19a77b.us-east-1.opensearch.localhost.l
 curl -X GET http://opensearchstack-sample19a77b.us-east-1.opensearch.localhost.localstack.cloud:4566/users/_search?pretty
 curl -X GET http://opensearchstack-sample19a77b.us-east-1.opensearch.localhost.localstack.cloud:4566/users/_mapping?pretty
 ```
+
+# API Gateway 経由のエンドポイント
+```sh
+curl -X GET http://localhost:4566/_aws/execute-api/{app-id}/{stage}/hello-world
+```

@@ -1,12 +1,13 @@
 {
-  "app": "npx ts-node --prefer-ts-exts bin/cdk.ts",
+  "app": "npx ts-node --prefer-ts-exts dist/bin/cdk.js",
   "watch": {
-    "include": ["**"],
+    "include": ["dist/**"],
     "exclude": [
       "README.md",
       "cdk*.json",
-      "**/*.d.ts",
-      "**/*.js",
+      "**/*.ts",
+      "bin",
+      "lib",
       "tsconfig.json",
       "package*.json",
       "yarn.lock",

@@ -11,6 +11,7 @@ services:
       - LAMBDA_EXECUTOR=docker
       - SMTP_HOST=mailhog:1025
       - PROVIDER_OVERRIDE_SES=smtp
+      - HOST_PROJECT_PATH=${PWD}
     volumes:
       - "./volume:/var/lib/localstack"
       - "/var/run/docker.sock:/var/run/docker.sock"
