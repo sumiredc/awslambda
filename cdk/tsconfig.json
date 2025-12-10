@@ -22,5 +22,6 @@
     "typeRoots": ["./node_modules/@types"],
     "outDir": "dist"
   },
+  "include": ["bin", "lib"],
   "exclude": ["node_modules", "cdk.out", "dist"]
 }

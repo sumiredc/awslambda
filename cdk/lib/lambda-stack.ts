@@ -9,7 +9,6 @@ import { Bucket, IBucket } from "aws-cdk-lib/aws-s3";
 // Lambda のコンテナが立ち上がる際に HOST PC のパスを辿るため
 // 環境変数でホスト PC のパスを受け取る
 const hostPath = process.env.HOST_PROJECT_PATH || "UNRESOLVE_HOST_PROJECT_PATH";
-console.log("HOST PC PATH", hostPath);
 
 /**
  *  Node 20.x の Lambda 用 handler

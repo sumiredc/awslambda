@@ -1,6 +1,7 @@
 import { S3 } from "aws-sdk";
 import { Handler } from "aws-lambda";
 import { APIGatewayProxyEvent, APIGatewayProxyResult } from "aws-lambda";
+import { GetObjectRequest } from "aws-sdk/clients/s3";
 
 const config: S3.ClientConfiguration = {
   endpoint: process.env.AWS_ENDPOINT,
@@ -13,8 +14,8 @@ export const handler: Handler = async (
   _: APIGatewayProxyEvent
 ): Promise<APIGatewayProxyResult> => {
   const s3 = new S3(config);
-  const params = {
-    Bucket: process.env.BUCKET_NAME,
+  const params: GetObjectRequest = {
+    Bucket: process.env.BUCKET_NAME || "",
     Key: "laptop.png",
   };
 

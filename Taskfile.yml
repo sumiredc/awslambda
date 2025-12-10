@@ -15,11 +15,6 @@ tasks:
     cmds:
       - docker compose exec aws sh ./deploy.sh
 
-  ses-verify:
+  watch:
     cmds:
-      - docker compose exec aws awslocal ses verify-email-identity --email-address "sender@example.com"
-      - docker compose exec aws awslocal ses verify-email-identity --email-address "receiver@example.com"
-
-  ses-list:
-    cmds:
-      - docker compose exec aws awslocal ses list-identities
+      - docker compose exec aws npm run watch
