@@ -4,7 +4,7 @@ import { APIGatewayProxyEvent, APIGatewayProxyResult } from "aws-lambda";
 import { GetObjectRequest } from "aws-sdk/clients/s3";
 
 const config: S3.ClientConfiguration = {
-  endpoint: process.env.AWS_ENDPOINT,
+  endpoint: process.env.AWS_ENDPOINT || "",
   s3ForcePathStyle: true,
   signatureVersion: "v4",
 };
