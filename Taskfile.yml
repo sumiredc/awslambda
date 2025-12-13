@@ -18,3 +18,7 @@ tasks:
   watch:
     cmds:
       - docker compose exec aws npm run watch
+
+  apiid:
+    cmds:
+      - docker compose exec aws awslocal apigateway get-rest-apis --query "items[*].{ID:id, Name:name}"

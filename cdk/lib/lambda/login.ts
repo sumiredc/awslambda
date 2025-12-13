@@ -2,8 +2,6 @@ import { Handler } from "aws-lambda";
 import { APIGatewayProxyEvent, APIGatewayProxyResult } from "aws-lambda";
 import { CognitoIdentityServiceProvider } from "aws-sdk";
 
-const USER_POOL_CLIENT_ID = "8a11ccf5356b411486064706d9";
-
 export const handler: Handler = async (
   _: APIGatewayProxyEvent
 ): Promise<APIGatewayProxyResult> => {
@@ -15,7 +13,7 @@ export const handler: Handler = async (
     const result = await cognito
       .initiateAuth({
         AuthFlow: "USER_PASSWORD_AUTH",
-        ClientId: USER_POOL_CLIENT_ID,
+        ClientId: process.env.USER_POOL_CLIENT_ID!,
         AuthParameters: {
           USERNAME: "user",
           PASSWORD: "Passw0rd+",

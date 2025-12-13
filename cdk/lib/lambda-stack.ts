@@ -3,8 +3,13 @@ import { Construct } from "constructs";
 import { LambdaIntegration, RestApi } from "aws-cdk-lib/aws-apigateway";
 import { Code, Runtime } from "aws-cdk-lib/aws-lambda";
 import { NodejsFunction } from "aws-cdk-lib/aws-lambda-nodejs";
-import { AppEnv } from "../bin/env";
+
 import { Bucket, IBucket } from "aws-cdk-lib/aws-s3";
+import {
+  AwsCustomResource,
+  AwsCustomResourcePolicy,
+  PhysicalResourceId,
+} from "aws-cdk-lib/custom-resources";
 
 // Lambda のコンテナが立ち上がる際に HOST PC のパスを辿るため
 // 環境変数でホスト PC のパスを受け取る
@@ -26,24 +31,33 @@ function runtimeNode20(
     runtime: Runtime.NODEJS_20_X,
     code: Code.fromBucket(stack.bucket, hostPath),
     handler: handlerName,
-    environment: stack.appEnv,
+    environment: {
+      BUCKET_NAME: process.env.BUCKET_NAME ?? "",
+      SENDER_EMAIL: process.env.SENDER_EMAIL ?? "",
+      AWS_ENDPOINT: process.env.AWS_ENDPOINT ?? "",
+      OPENSEARCH_ENDPOINT: process.env.OPENSEARCH_ENDPOINT ?? "",
+      MAIL_HOST: process.env.MAIL_HOST ?? "",
+      MAIL_PORT: process.env.MAIL_PORT ?? "",
+      MAIL_AUTH_USER: process.env.MAIL_AUTH_USER ?? "",
+      MAIL_AUTH_PASSWORD: process.env.MAIL_AUTH_PASSWORD ?? "",
+      COGNITO_USER_POOL_CLIENT_ID:
+        process.env.COGNITO_USER_POOL_CLIENT_ID ?? "",
+    },
   });
 }
 
 export class LambdaStack extends Stack {
-  public readonly appEnv: AppEnv;
   public readonly bucket: IBucket;
 
-  constructor(
-    scope: Construct,
-    id: string,
-    props: StackProps,
-    appEnv: AppEnv,
-    restAPI: RestApi
-  ) {
+  constructor(scope: Construct, id: string, props: StackProps) {
     super(scope, id, props);
-    this.appEnv = appEnv;
+
     this.bucket = Bucket.fromBucketName(this, "HotReloadBucket", "hot-reload");
+
+    const restAPI = new RestApi(this, "SampleAPI", {
+      restApiName: "SampleAPI",
+      deploy: false,
+    });
 
     // GET /hello-world
     restAPI.root
@@ -110,5 +124,29 @@ export class LambdaStack extends Stack {
           )
         )
       );
+
+    new AwsCustomResource(this, "TriggerDeployment", {
+      onCreate: {
+        service: "APIGateway",
+        action: "createDeployment",
+        parameters: {
+          restApiId: restAPI.restApiId,
+          stageName: "v1",
+        },
+        physicalResourceId: PhysicalResourceId.of(new Date().toISOString()),
+      },
+      onUpdate: {
+        service: "APIGateway",
+        action: "createDeployment",
+        parameters: {
+          restApiId: restAPI.restApiId,
+          stageName: "v1",
+        },
+        physicalResourceId: PhysicalResourceId.of(new Date().toISOString()),
+      },
+      policy: AwsCustomResourcePolicy.fromSdkCalls({
+        resources: AwsCustomResourcePolicy.ANY_RESOURCE,
+      }),
+    });
   }
 }

@@ -92,18 +92,6 @@
     "@aws-cdk/s3-notifications:addS3TrustKeyPolicyForSnsSubscriptions": true,
     "@aws-cdk/aws-ec2:requirePrivateSubnetsForEgressOnlyInternetGateway": true,
     "@aws-cdk/aws-s3:publicAccessBlockedByDefault": true,
-    "@aws-cdk/aws-lambda:useCdkManagedLogGroup": true,
-
-    "localEnv": {
-      "ENV": "local",
-      "BUCKET_NAME": "sample-bucket",
-      "SENDER_EMAIL": "sender@example.com",
-      "AWS_ENDPOINT": "http://aws:4566",
-      "OPENSEARCH_ENDPOINT": "http://opensearchstack-sample19a77b.us-east-1.opensearch.localhost.localstack.cloud:4566",
-      "MAIL_HOST": "mailhog",
-      "MAIL_PORT": "1025",
-      "MAIL_AUTH_USER": "user",
-      "MAIL_AUTH_PASSWORD": "password"
-    }
+    "@aws-cdk/aws-lambda:useCdkManagedLogGroup": true
   }
 }

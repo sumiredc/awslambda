@@ -1,25 +1,12 @@
 import { App } from "aws-cdk-lib";
+import { config } from "dotenv";
 
-interface StringValues {
-  [key: string]: string;
-}
-
-export interface AppEnv extends StringValues {
-  BUCKET_NAME: string;
-  SENDER_EMAIL: string;
-  AWS_ENDPOINT: string;
-  OPENSEARCH_ENDPOINT: string;
-  MAIL_HOST: string;
-  MAIL_PORT: string;
-  MAIL_AUTH_USER: string;
-  MAIL_AUTH_PASSWORD: string;
-}
-
-export function getAppEnv(app: App): AppEnv {
-  const vals = app.node.tryGetContext("localEnv");
-  if (!vals) {
-    throw new Error("Context not found: env vals");
+export function loadEnv(app: App) {
+  let path = ".env";
+  const env = app.node.tryGetContext("env");
+  if (env) {
+    path += `.${env}`;
   }
 
-  return vals;
+  config({ path });
 }

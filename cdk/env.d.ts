@@ -11,6 +11,7 @@ declare module "process" {
         MAIL_PORT: string;
         MAIL_AUTH_USER: string;
         MAIL_AUTH_PASSWORD: string;
+        COGNITO_USER_POOL_CLIENT_ID: string;
       }
     }
   }

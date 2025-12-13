@@ -1,10 +1,9 @@
 import { AttributeType, BillingMode, Table } from "aws-cdk-lib/aws-dynamodb";
 import { RemovalPolicy, Stack, StackProps } from "aws-cdk-lib/core";
 import { Construct } from "constructs";
-import { AppEnv } from "../bin/env";
 
 export class DynamoDBStack extends Stack {
-  constructor(scope: Construct, id: string, props: StackProps, appEnv: AppEnv) {
+  constructor(scope: Construct, id: string, props: StackProps) {
     super(scope, id, props);
 
     new Table(this, "UserTable", {
