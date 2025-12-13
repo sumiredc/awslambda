@@ -9,19 +9,23 @@ services:
       - DEBUG=1
       - DOCKER_HOST=unix:///var/run/docker.sock
       - LAMBDA_EXECUTOR=docker
-      - SMTP_HOST=mailhog:1025
       - PROVIDER_OVERRIDE_SES=smtp
-      - HOST_PROJECT_PATH=${PWD}
+      - HOST_PROJECT_PATH=${PWD}/cdk
     volumes:
       - "./volume:/var/lib/localstack"
       - "/var/run/docker.sock:/var/run/docker.sock"
       - "./cdk:/opt/code/cdk"
-    depends_on: 
-      - mailhog
 
   mailhog:
-    image: mailhog/mailhog
+    image: mailhog/mailhog:v1.0.1
     platform: linux/amd64
     ports:
       - 1025:1025
       - 8025:8025
+
+  motoserver:
+    image: motoserver/moto:5.1.18
+    ports:
+      - 4000:4000
+    environment:
+      - MOTO_PORT=4000

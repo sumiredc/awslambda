@@ -74,8 +74,8 @@ export const handler: Handler = async (
 
   return {
     statusCode: 201,
-    headers: { "Content-Type": "text/plain" },
-    body: "Created",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ message: "Created" }),
   };
 };
 

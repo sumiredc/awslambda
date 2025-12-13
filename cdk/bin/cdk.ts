@@ -17,3 +17,7 @@ new DynamoDBStack(app, "DynamoDBStack", {}, appEnv);
 new LambdaStack(app, "LambdaStack", {}, appEnv, apiGatewayStack.restAPI);
 new OpenSearchStack(app, "OpenSearchStack", {}, appEnv);
 new S3Stack(app, "S3Stack", {}, appEnv);
+
+apiGatewayStack.restAPI.latestDeployment?.addToLogicalId(
+  new Date().toISOString()
+);

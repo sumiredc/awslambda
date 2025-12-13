@@ -45,7 +45,7 @@ export class LambdaStack extends Stack {
     this.appEnv = appEnv;
     this.bucket = Bucket.fromBucketName(this, "HotReloadBucket", "hot-reload");
 
-    // Hello World
+    // GET /hello-world
     restAPI.root
       .addResource("hello-world")
       .addMethod(
@@ -59,7 +59,7 @@ export class LambdaStack extends Stack {
         )
       );
 
-    // Get Object
+    // GET /get-object
     restAPI.root
       .addResource("get-object")
       .addMethod(
@@ -73,7 +73,7 @@ export class LambdaStack extends Stack {
         )
       );
 
-    // Create User
+    // POST /create-user
     restAPI.root
       .addResource("create-user")
       .addMethod(
@@ -87,13 +87,27 @@ export class LambdaStack extends Stack {
         )
       );
 
-    // Send Mail
+    // POST /login
+    restAPI.root
+      .addResource("login")
+      .addMethod(
+        "POST",
+        new LambdaIntegration(
+          runtimeNode20(this, "LoginFunction", "dist/lib/lambda/login.handler")
+        )
+      );
+
+    // POST /send-mail
     restAPI.root
       .addResource("send-mail")
       .addMethod(
         "POST",
         new LambdaIntegration(
-          runtimeNode20(this, "SendMailFunction", "dist/lib/lambda/send-mail")
+          runtimeNode20(
+            this,
+            "SendMailFunction",
+            "dist/lib/lambda/send-mail.handler"
+          )
         )
       );
   }

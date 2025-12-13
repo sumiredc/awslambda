@@ -15,6 +15,5 @@ export class APIGatewayStack extends Stack {
         stageName: "v1",
       },
     });
-    // this.restAPI.latestDeployment?.addToLogicalId(new Date().toISOString());
   }
 }

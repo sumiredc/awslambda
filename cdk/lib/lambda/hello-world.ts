@@ -7,7 +7,7 @@ export const handler: Handler = async (
 ): Promise<APIGatewayProxyResult> => {
   return {
     statusCode: 200,
-    headers: { "Content-Type": "text/plain" },
-    body: "Hello World!",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ message: "Hello World!" }),
   };
 };
