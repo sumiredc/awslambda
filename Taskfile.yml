@@ -19,6 +19,14 @@ tasks:
     cmds:
       - docker compose exec aws npm run watch
 
+  delete-lambda:
+    cmds:
+      - docker compose exec aws awslocal cloudformation delete-stack --stack-name LambdaStack
+
   apiid:
     cmds:
-      - docker compose exec aws awslocal apigateway get-rest-apis --query "items[*].{ID:id, Name:name}"
+      - docker compose exec aws awslocal apigateway get-rest-apis --query "items[*].id"
+
+  openapi:
+    cmds:
+      - sh ./openapi.sh

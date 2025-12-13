@@ -1,6 +1,11 @@
 import { Stack, StackProps } from "aws-cdk-lib/core";
-import { Construct } from "constructs";
-import { LambdaIntegration, RestApi } from "aws-cdk-lib/aws-apigateway";
+import { Construct, IConstruct } from "constructs";
+import {
+  Cors,
+  LambdaIntegration,
+  Model,
+  RestApi,
+} from "aws-cdk-lib/aws-apigateway";
 import { Code, Runtime } from "aws-cdk-lib/aws-lambda";
 import { NodejsFunction } from "aws-cdk-lib/aws-lambda-nodejs";
 
@@ -10,6 +15,7 @@ import {
   AwsCustomResourcePolicy,
   PhysicalResourceId,
 } from "aws-cdk-lib/custom-resources";
+import { helloWorldAPI } from "./lambda/hello-world";
 
 // Lambda のコンテナが立ち上がる際に HOST PC のパスを辿るため
 // 環境変数でホスト PC のパスを受け取る
@@ -59,19 +65,28 @@ export class LambdaStack extends Stack {
       deploy: false,
     });
 
+    const defaultCors = {
+      allowOrigins: ["*"],
+      allowMethods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
+      allowHeaders: Cors.DEFAULT_HEADERS,
+    };
+
     // GET /hello-world
-    restAPI.root
-      .addResource("hello-world")
-      .addMethod(
-        "GET",
-        new LambdaIntegration(
-          runtimeNode20(
-            this,
-            "HelloWorldFunction",
-            "dist/lib/lambda/hello-world.handler"
-          )
+    const helloWorldResource = restAPI.root.addResource("hello-world");
+    helloWorldResource.addCorsPreflight(defaultCors);
+    helloWorldResource.addMethod(
+      "GET",
+      new LambdaIntegration(
+        runtimeNode20(
+          this,
+          "HelloWorldFunction",
+          "dist/lib/lambda/hello-world.handler"
         )
-      );
+      ),
+      {
+        methodResponses: helloWorldAPI.responses,
+      }
+    );
 
     // GET /get-object
     restAPI.root
@@ -102,14 +117,14 @@ export class LambdaStack extends Stack {
       );
 
     // POST /login
-    restAPI.root
-      .addResource("login")
-      .addMethod(
-        "POST",
-        new LambdaIntegration(
-          runtimeNode20(this, "LoginFunction", "dist/lib/lambda/login.handler")
-        )
-      );
+    const loginResource = restAPI.root.addResource("login");
+    loginResource.addCorsPreflight(defaultCors);
+    loginResource.addMethod(
+      "POST",
+      new LambdaIntegration(
+        runtimeNode20(this, "LoginFunction", "dist/lib/lambda/login.handler")
+      )
+    );
 
     // POST /send-mail
     restAPI.root

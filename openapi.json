@@ -1,0 +1,113 @@
+{
+  "info": {
+    "title": "SampleAPI",
+    "version": "2025-12-13T19:39:32Z"
+  },
+  "servers": [
+    {
+      "variables": {
+        "basePath": {
+          "default": "v1"
+        }
+      },
+      "url": "http://localhost:4566/_aws/execute-api/9ggngwrtxk/{basePath}"
+    }
+  ],
+  "paths": {
+    "/create-user": {
+      "post": {
+        "responses": {}
+      }
+    },
+    "/get-object": {
+      "get": {
+        "responses": {}
+      }
+    },
+    "/hello-world": {
+      "get": {
+        "responses": {}
+      },
+      "options": {
+        "responses": {
+          "204": {
+            "description": "204 response",
+            "headers": {
+              "Access-Control-Allow-Headers": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "Access-Control-Allow-Methods": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "Access-Control-Allow-Origin": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {}
+          }
+        }
+      }
+    },
+    "/login": {
+      "options": {
+        "responses": {
+          "204": {
+            "description": "204 response",
+            "headers": {
+              "Access-Control-Allow-Headers": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "Access-Control-Allow-Methods": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "Access-Control-Allow-Origin": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {}
+          }
+        }
+      },
+      "post": {
+        "responses": {}
+      }
+    },
+    "/send-mail": {
+      "post": {
+        "responses": {}
+      }
+    }
+  },
+  "openapi": "3.0.1",
+  "components": {
+    "schemas": {
+      "Empty": {
+        "$schema": "http://json-schema.org/draft-04/schema#",
+        "title": "Empty Schema",
+        "type": "object"
+      },
+      "Error": {
+        "$schema": "http://json-schema.org/draft-04/schema#",
+        "title": "Error Schema",
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  }
+}
