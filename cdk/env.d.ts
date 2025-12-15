@@ -3,6 +3,7 @@ declare module "process" {
     namespace NodeJS {
       interface ProcessEnv {
         NODE_ENV?: string;
+        ENV: string;
         BUCKET_NAME: string;
         SENDER_EMAIL: string;
         AWS_ENDPOINT: string;

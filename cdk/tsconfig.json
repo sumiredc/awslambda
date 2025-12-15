@@ -20,7 +20,10 @@
     "strictPropertyInitialization": false,
     "skipLibCheck": true,
     "typeRoots": ["./node_modules/@types"],
-    "outDir": "dist"
+    "outDir": "dist",
+    "paths": {
+      "@/*": ["lib/*"]
+    }
   },
   "include": ["bin", "lib"],
   "exclude": ["node_modules", "cdk.out", "dist"]

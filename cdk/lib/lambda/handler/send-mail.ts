@@ -1,27 +1,16 @@
 import { Handler } from "aws-lambda";
 import { APIGatewayProxyEvent, APIGatewayProxyResult } from "aws-lambda";
-import { createTransport } from "nodemailer";
+import { sendMail } from "@/repository/mail";
 
 // Send Mail
 export const handler: Handler = async (
   _: APIGatewayProxyEvent
 ): Promise<APIGatewayProxyResult> => {
-  const transporter = createTransport({
-    host: process.env.MAIL_HOST,
-    port: Number(process.env.MAIL_PORT),
-    secure: false,
-    auth: {
-      user: process.env.MAIL_AUTH_USER,
-      pass: process.env.MAIL_AUTH_PASSWORD,
-    },
-  });
-
   try {
-    const response = await transporter.sendMail({
-      from: process.env.SENDER_EMAIL,
+    const response = await sendMail({
       to: "receiver@example.com",
       subject: "テストメール",
-      text: "これはテストメールです",
+      body: "これはテストメールです",
     });
 
     console.info(response);
@@ -33,6 +22,7 @@ export const handler: Handler = async (
     };
   } catch (error) {
     console.error(error);
+
     return {
       statusCode: 500,
       body: "Internal Server Error",

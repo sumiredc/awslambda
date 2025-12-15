@@ -1,21 +1,15 @@
 import { Stack, StackProps } from "aws-cdk-lib/core";
-import { Construct, IConstruct } from "constructs";
-import {
-  Cors,
-  LambdaIntegration,
-  Model,
-  RestApi,
-} from "aws-cdk-lib/aws-apigateway";
+import { Construct } from "constructs";
+import { Cors, LambdaIntegration, RestApi } from "aws-cdk-lib/aws-apigateway";
 import { Code, Runtime } from "aws-cdk-lib/aws-lambda";
 import { NodejsFunction } from "aws-cdk-lib/aws-lambda-nodejs";
-
 import { Bucket, IBucket } from "aws-cdk-lib/aws-s3";
 import {
   AwsCustomResource,
   AwsCustomResourcePolicy,
   PhysicalResourceId,
 } from "aws-cdk-lib/custom-resources";
-import { helloWorldAPI } from "./lambda/hello-world";
+import { helloWorldAPI } from "./lambda/handler/hello-world";
 
 // Lambda のコンテナが立ち上がる際に HOST PC のパスを辿るため
 // 環境変数でホスト PC のパスを受け取る
@@ -38,6 +32,7 @@ function runtimeNode20(
     code: Code.fromBucket(stack.bucket, hostPath),
     handler: handlerName,
     environment: {
+      ENV: process.env.ENV ?? "",
       BUCKET_NAME: process.env.BUCKET_NAME ?? "",
       SENDER_EMAIL: process.env.SENDER_EMAIL ?? "",
       AWS_ENDPOINT: process.env.AWS_ENDPOINT ?? "",
@@ -80,7 +75,7 @@ export class LambdaStack extends Stack {
         runtimeNode20(
           this,
           "HelloWorldFunction",
-          "dist/lib/lambda/hello-world.handler"
+          "dist/lib/lambda/handler/hello-world.handler"
         )
       ),
       {
@@ -97,7 +92,7 @@ export class LambdaStack extends Stack {
           runtimeNode20(
             this,
             "GetObjectFunction",
-            "dist/lib/lambda/get-object.handler"
+            "dist/lib/lambda/handler/get-object.handler"
           )
         )
       );
@@ -111,7 +106,7 @@ export class LambdaStack extends Stack {
           runtimeNode20(
             this,
             "CreateUserFunction",
-            "dist/lib/lambda/create-user.handler"
+            "dist/lib/lambda/handler/create-user.handler"
           )
         )
       );
@@ -122,7 +117,11 @@ export class LambdaStack extends Stack {
     loginResource.addMethod(
       "POST",
       new LambdaIntegration(
-        runtimeNode20(this, "LoginFunction", "dist/lib/lambda/login.handler")
+        runtimeNode20(
+          this,
+          "LoginFunction",
+          "dist/lib/lambda/handler/login.handler"
+        )
       )
     );
 
@@ -135,7 +134,7 @@ export class LambdaStack extends Stack {
           runtimeNode20(
             this,
             "SendMailFunction",
-            "dist/lib/lambda/send-mail.handler"
+            "dist/lib/lambda/handler/send-mail.handler"
           )
         )
       );
