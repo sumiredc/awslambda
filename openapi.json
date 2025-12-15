@@ -1,16 +1,19 @@
 {
   "info": {
     "title": "SampleAPI",
-    "version": "2025-12-13T19:39:32Z"
+    "version": "2025-12-15T04:44:47Z"
   },
   "servers": [
     {
       "variables": {
         "basePath": {
           "default": "v1"
+        },
+        "apiID": {
+          "default": "u7f1ezzqgb"
         }
       },
-      "url": "http://localhost:4566/_aws/execute-api/9ggngwrtxk/{basePath}"
+      "url": "http://localhost:4566/_aws/execute-api/{apiID}/{basePath}"
     }
   ],
   "paths": {
@@ -26,7 +29,22 @@
     },
     "/hello-world": {
       "get": {
-        "responses": {}
+        "responses": {
+          "200": {
+            "description": "200 response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Empty"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "500 response",
+            "content": {}
+          }
+        }
       },
       "options": {
         "responses": {
