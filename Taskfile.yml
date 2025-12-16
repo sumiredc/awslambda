@@ -15,9 +15,22 @@ tasks:
     cmds:
       - docker compose exec aws npx cdklocal bootstrap
 
+  setup-moto:
+    cmds:
+      - docker compose exec aws sh ./setup-moto.sh
+
   deploy:
     cmds:
       - docker compose exec aws sh ./deploy.sh
+
+  deploy-moto:
+    cmds:
+      - docker compose exec aws sh ./deploy-moto.sh
+
+  deploy-all:
+    cmds:
+      - task: deploy
+      - task: deploy-moto
 
   watch:
     cmds:
@@ -34,3 +47,7 @@ tasks:
   openapi:
     cmds:
       - sh ./openapi.sh
+
+  setenv:
+    cmds:
+      - sh ./setenv.sh
