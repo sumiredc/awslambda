@@ -22,10 +22,8 @@
     "typeRoots": ["./node_modules/@types"],
     "outDir": "dist",
     "baseUrl": ".",
-    "paths": {
-      "@/*": ["lib/*"]
-    }
+    "esModuleInterop": true
   },
-  "include": ["bin", "lib"],
-  "exclude": ["node_modules", "cdk.out", "dist"]
+  "include": ["bin", "lib", "env.d.ts"],
+  "exclude": ["node_modules", "cdk.out", "dist", "dist_moto"]
 }

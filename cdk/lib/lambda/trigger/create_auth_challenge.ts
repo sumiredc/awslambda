@@ -1,6 +1,9 @@
-import { sendMail } from "@/repository/mail";
 import { Context, CreateAuthChallengeTriggerEvent, Handler } from "aws-lambda";
+import { sendMail } from "lib/repository/mail";
 
+/**
+ * 認証コードの作成
+ */
 export const handler: Handler<CreateAuthChallengeTriggerEvent> = async (
   event: CreateAuthChallengeTriggerEvent,
   _: Context
@@ -14,16 +17,14 @@ export const handler: Handler<CreateAuthChallengeTriggerEvent> = async (
       subject: "認証コード",
       body: secretCode,
     });
-  } catch (error) {}
+  } catch (error) {
+    console.error(error);
 
-  event.response.publicChallengeParameters = {
-    email,
-  };
+    return event;
+  }
 
-  event.response.privateChallengeParameters = {
-    answer: secretCode,
-  };
-
+  event.response.publicChallengeParameters = { email };
+  event.response.privateChallengeParameters = { answer: secretCode };
   event.response.challengeMetadata = secretCode;
 
   return event;

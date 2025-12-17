@@ -1,6 +1,9 @@
-import { Handler } from "aws-lambda";
-import { APIGatewayProxyEvent, APIGatewayProxyResult } from "aws-lambda";
-import { sendMail } from "@/repository/mail";
+import {
+  APIGatewayProxyEvent,
+  APIGatewayProxyResult,
+  Handler,
+} from "aws-lambda";
+import { sendMail } from "lib/repository/mail";
 
 // Send Mail
 export const handler: Handler = async (

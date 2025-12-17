@@ -1,14 +1,16 @@
-import { Stack, StackProps } from "aws-cdk-lib/core";
-import { Construct } from "constructs";
-import { Cors, LambdaIntegration, RestApi } from "aws-cdk-lib/aws-apigateway";
+import {
+  Cors,
+  Deployment,
+  LambdaIntegration,
+  Method,
+  RestApi,
+  Stage,
+} from "aws-cdk-lib/aws-apigateway";
 import { Code, Runtime } from "aws-cdk-lib/aws-lambda";
 import { NodejsFunction } from "aws-cdk-lib/aws-lambda-nodejs";
 import { Bucket, IBucket } from "aws-cdk-lib/aws-s3";
-import {
-  AwsCustomResource,
-  AwsCustomResourcePolicy,
-  PhysicalResourceId,
-} from "aws-cdk-lib/custom-resources";
+import { Duration, Stack, StackProps } from "aws-cdk-lib/core";
+import { Construct } from "constructs";
 import { helloWorldAPI } from "./lambda/handler/hello-world";
 
 // Lambda のコンテナが立ち上がる際に HOST PC のパスを辿るため
@@ -31,6 +33,7 @@ function runtimeNode20(
     runtime: Runtime.NODEJS_20_X,
     code: Code.fromBucket(stack.bucket, hostPath),
     handler: handlerName,
+    timeout: Duration.seconds(30),
     environment: {
       ENV: process.env.ENV ?? "",
       BUCKET_NAME: process.env.BUCKET_NAME ?? "",
@@ -41,8 +44,10 @@ function runtimeNode20(
       MAIL_PORT: process.env.MAIL_PORT ?? "",
       MAIL_AUTH_USER: process.env.MAIL_AUTH_USER ?? "",
       MAIL_AUTH_PASSWORD: process.env.MAIL_AUTH_PASSWORD ?? "",
+      COGNITO_USER_POOL_ID: process.env.COGNITO_USER_POOL_ID ?? "",
       COGNITO_USER_POOL_CLIENT_ID:
         process.env.COGNITO_USER_POOL_CLIENT_ID ?? "",
+      COGNITO_ENDPOINT: process.env.COGNITO_ENDPOINT ?? "",
     },
   });
 }
@@ -65,6 +70,20 @@ export class LambdaStack extends Stack {
       allowMethods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
       allowHeaders: Cors.DEFAULT_HEADERS,
     };
+
+    // POST /login
+    const loginResource = restAPI.root.addResource("login");
+    loginResource.addCorsPreflight(defaultCors);
+    loginResource.addMethod(
+      "POST",
+      new LambdaIntegration(
+        runtimeNode20(
+          this,
+          "LoginFunction",
+          "dist/lib/lambda/handler/auth/login.handler"
+        )
+      )
+    );
 
     // GET /hello-world
     const helloWorldResource = restAPI.root.addResource("hello-world");
@@ -111,20 +130,6 @@ export class LambdaStack extends Stack {
         )
       );
 
-    // POST /login
-    const loginResource = restAPI.root.addResource("login");
-    loginResource.addCorsPreflight(defaultCors);
-    loginResource.addMethod(
-      "POST",
-      new LambdaIntegration(
-        runtimeNode20(
-          this,
-          "LoginFunction",
-          "dist/lib/lambda/handler/login.handler"
-        )
-      )
-    );
-
     // POST /send-mail
     restAPI.root
       .addResource("send-mail")
@@ -139,28 +144,19 @@ export class LambdaStack extends Stack {
         )
       );
 
-    new AwsCustomResource(this, "TriggerDeployment", {
-      onCreate: {
-        service: "APIGateway",
-        action: "createDeployment",
-        parameters: {
-          restApiId: restAPI.restApiId,
-          stageName: "v1",
-        },
-        physicalResourceId: PhysicalResourceId.of(new Date().toISOString()),
-      },
-      onUpdate: {
-        service: "APIGateway",
-        action: "createDeployment",
-        parameters: {
-          restApiId: restAPI.restApiId,
-          stageName: "v1",
-        },
-        physicalResourceId: PhysicalResourceId.of(new Date().toISOString()),
-      },
-      policy: AwsCustomResourcePolicy.fromSdkCalls({
-        resources: AwsCustomResourcePolicy.ANY_RESOURCE,
-      }),
+    const deployment = new Deployment(this, "Deployment", {
+      api: restAPI,
+    });
+
+    restAPI.root.node.findAll().forEach((node) => {
+      if (node instanceof Method) {
+        deployment.node.addDependency(node);
+      }
+    });
+
+    new Stage(this, "Stage", {
+      deployment: deployment,
+      stageName: "v1",
     });
   }
 }

@@ -1,6 +1,10 @@
 import { Model } from "aws-cdk-lib/aws-apigateway";
-import { Handler } from "aws-lambda";
-import { APIGatewayProxyEvent, APIGatewayProxyResult } from "aws-lambda";
+import {
+  APIGatewayProxyEvent,
+  APIGatewayProxyResult,
+  Handler,
+} from "aws-lambda";
+import { CORS_HEADERS } from "lib/utils/cors";
 
 // Hello World
 export const handler: Handler = async (
@@ -8,12 +12,7 @@ export const handler: Handler = async (
 ): Promise<APIGatewayProxyResult> => {
   return {
     statusCode: 200,
-    headers: {
-      "Content-Type": "application/json",
-      "Access-Control-Allow-Origin": "*",
-      "Access-Control-Allow-Headers": "Content-Type",
-      "Access-Control-Allow-Methods": "OPTIONS,GET",
-    },
+    headers: { "Content-Type": "application/json", ...CORS_HEADERS },
     body: JSON.stringify({ message: "Hello World!" }),
   };
 };

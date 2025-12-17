@@ -1,5 +1,3 @@
-# https://taskfile.dev
-
 version: "3"
 
 tasks:
@@ -18,19 +16,6 @@ tasks:
   setup-moto:
     cmds:
       - docker compose exec aws sh ./setup-moto.sh
-
-  deploy:
-    cmds:
-      - docker compose exec aws sh ./deploy.sh
-
-  deploy-moto:
-    cmds:
-      - docker compose exec aws sh ./deploy-moto.sh
-
-  deploy-all:
-    cmds:
-      - task: deploy
-      - task: deploy-moto
 
   watch:
     cmds:
@@ -51,3 +36,7 @@ tasks:
   setenv:
     cmds:
       - sh ./setenv.sh
+
+  function-names:
+    cmds:
+      - docker compose exec aws awslocal lambda list-functions --query "Functions[*].FunctionName"

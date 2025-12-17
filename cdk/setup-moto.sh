@@ -3,6 +3,7 @@ COGNITO_USER_NAME=user
 COGNITO_USER_EMAIL=user@example.com
 COGNITO_USER_PASSWORD=Passw0rd+
 LAMBDA_ROLE_NAME="moto-lambda-role"
+IAM_USER=admin-user
 
 create_user_pool() {
     awslocal cognito-idp create-user-pool \

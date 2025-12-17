@@ -48,15 +48,15 @@ rm -rf $DIST_DIR
 
 # 1. 各Lambdaをデプロイし、ARNを変数に格納
 ARN_CREATE=$(deploy_lambda "CreateAuthChallenge" "create_auth_challenge.ts")
-ARN_VERIFY=$(deploy_lambda "VerifyAuthChallenge" "verify_auth_challenge.ts")
 ARN_DEFINE=$(deploy_lambda "DefineAuthChallenge" "define_auth_challenge.ts")
+ARN_VERIFY=$(deploy_lambda "VerifyAuthChallengeResponse" "verify_auth_challenge_response.ts")
 
 EXISTING_POOL_ID=$(awslocal cognito-idp list-user-pools --max-results 1 \
     --endpoint-url $MOTO_ENDPOINT \
     --query 'UserPools[0].Id' \
     --output text)
 
-if [ "$EXISTING_POOL_ID" == "None" ]; then
+if [ "$EXISTING_POOL_ID" = "None" ]; then
     echo "❌ Error: User Pool not found in motoserver."
     echo "Please create a User Pool first or check if motoserver is running."
     exit 1
@@ -71,7 +71,7 @@ echo "🔗 Linking Lambda Triggers to User Pool..."
 # トリガー設定(LambdaConfig)のみを安全に適用します。
 awslocal cognito-idp update-user-pool \
     --user-pool-id $EXISTING_POOL_ID \
-    --lambda-config "CreateAuthChallenge=$ARN_CREATE,DefineAuthChallenge=$ARN_DEFINE,VerifyAuthChallenge=$ARN_VERIFY" \
+    --lambda-config "CreateAuthChallenge=$ARN_CREATE,DefineAuthChallenge=$ARN_DEFINE,VerifyAuthChallengeResponse=$ARN_VERIFY" \
     --endpoint-url $MOTO_ENDPOINT
 
 echo "--------------------------------------------------"
@@ -79,5 +79,5 @@ echo "✅ Update Complete!"
 echo "   User Pool ($EXISTING_POOL_ID) is now linked to:"
 echo "   - CreateAuthChallenge: $ARN_CREATE"
 echo "   - DefineAuthChallenge: $ARN_DEFINE"
-echo "   - VerifyAuthChallenge: $ARN_VERIFY"
+echo "   - VerifyAuthChallengeResponse: $ARN_VERIFY"
 echo "--------------------------------------------------"

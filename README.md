@@ -24,15 +24,16 @@ awslocal apigateway create-deployment --rest-api-id xxx --stage-name v1
 ```
 
 # Cognito (motoserver)
+motoserver には awslocal コマンドが登録されていないため、localstack 経由で実行する
 ```sh
-ENDPOINT_URL=http://localhost:4000
+ENDPOINT_URL=http://motoserver:4000
 COGNITO_USER_NAME=user
 COGNITO_USER_EMAIL=user@example.com
 COGNITO_USER_PASSWORD=Passw0rd+
 
 # ap-northeast-1_00b5aa457f62426c8900c4a8b3fde0ab
 USER_POOL_ID=$(
-aws cognito-idp create-user-pool \
+awslocal cognito-idp create-user-pool \
     --pool-name MyUserPool \
     --query UserPool.Id \
     --output text \
@@ -41,7 +42,7 @@ aws cognito-idp create-user-pool \
 
 # 8a11ccf5356b411486064706d9
 CLIENT_ID=$(
-aws cognito-idp create-user-pool-client \
+awslocal cognito-idp create-user-pool-client \
     --client-name MyUserPoolClient \
     --user-pool-id ${USER_POOL_ID} \
     --output text \
@@ -49,24 +50,28 @@ aws cognito-idp create-user-pool-client \
     --endpoint-url ${ENDPOINT_URL} \
 )
 
-aws cognito-idp admin-create-user \
+awslocal cognito-idp admin-create-user \
     --user-pool-id ${USER_POOL_ID} \
     --username ${COGNITO_USER_NAME} \
     --user-attributes Name=email,Value=${COGNITO_USER_EMAIL} Name=email_verified,Value=true \
     --message-action SUPPRESS \
     --endpoint-url ${ENDPOINT_URL}
 
-aws cognito-idp admin-set-user-password \
+awslocal cognito-idp admin-set-user-password \
   --user-pool-id ${USER_POOL_ID} \
   --username ${COGNITO_USER_NAME} \
   --password ${COGNITO_USER_PASSWORD} \
   --permanent \
   --endpoint-url ${ENDPOINT_URL}
 
-aws cognito-idp list-users \
+awslocal cognito-idp list-users \
   --user-pool-id ${USER_POOL_ID} \
   --query "Users[0].[Username,UserStatus]" \
   --endpoint-url ${ENDPOINT_URL}
+
+awslocal cognito-idp list-user-pools --max-results 1 --endpoint-url http://motoserver:4000 --query 'UserPools[0].Id' --output text
+
+awslocal cognito-idp list-user-pool-clients --user-pool-id {UserPoolID} --endpoint-url http://motoserver:4000 --query 'UserPoolClients[0].ClientId' --output text
 ```
 
 ```json
@@ -94,4 +99,5 @@ aws cognito-idp list-users \
         "MFAOptions": []
     }
 }
+
 ```

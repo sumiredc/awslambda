@@ -4,6 +4,9 @@ import {
   VerifyAuthChallengeResponseTriggerEvent,
 } from "aws-lambda";
 
+/**
+ * 認証コードの採点処理
+ */
 export const handler: Handler<VerifyAuthChallengeResponseTriggerEvent> = async (
   event: VerifyAuthChallengeResponseTriggerEvent,
   _: Context

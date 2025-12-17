@@ -1,9 +1,8 @@
 {
-  "app": "npx ts-node --prefer-ts-exts dist/bin/cdk.js",
+  "app": "npx ts-node -r tsconfig-paths/register --prefer-ts-exts bin/cdk.ts",
   "watch": {
     "include": ["dist/**"],
     "exclude": [
-      "README.md",
       "cdk*.json",
       "**/*.ts",
       "bin",

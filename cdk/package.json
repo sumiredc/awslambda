@@ -5,21 +5,25 @@
     "cdk": "bin/cdk.js"
   },
   "scripts": {
-    "build": "tsc",
-    "watch": "tsc -w",
+    "build": "tsc && tsc-alias",
+    "watch": "concurrently \"tsc -w\" \"tsc-alias -w\"",
     "test": "jest",
     "cdk": "cdk"
   },
   "devDependencies": {
     "@types/aws-lambda": "^8.10.159",
     "@types/jest": "^29.5.14",
+    "@types/jsbn": "^1.2.33",
     "@types/node": "^24.10.1",
     "aws-cdk": "^2.1034.0",
     "aws-cdk-local": "^3.0.1",
-    "esbuild": "^0.27.0",
+    "concurrently": "^9.2.1",
+    "esbuild": "^0.27.1",
     "jest": "^29.7.0",
     "ts-jest": "^29.2.5",
     "ts-node": "^10.9.2",
+    "tsc-alias": "^1.8.16",
+    "tsconfig-paths": "^4.2.0",
     "typescript": "~5.9.3"
   },
   "dependencies": {
@@ -27,10 +31,13 @@
     "@aws-sdk/client-ses": "^3.940.0",
     "@opensearch-project/opensearch": "^3.5.1",
     "@types/nodemailer": "^7.0.4",
+    "amazon-cognito-identity-js": "^6.3.16",
     "aws-cdk-lib": "2.215.0",
     "aws-sdk": "^2.1692.0",
     "constructs": "^10.0.0",
     "dotenv": "^17.2.3",
+    "jsbn": "^1.1.0",
+    "node-fetch": "^3.3.2",
     "nodemailer": "^7.0.11",
     "uuid": "^13.0.0"
   }
