@@ -11,6 +11,7 @@ import { NodejsFunction } from "aws-cdk-lib/aws-lambda-nodejs";
 import { Bucket, IBucket } from "aws-cdk-lib/aws-s3";
 import { Duration, Stack, StackProps } from "aws-cdk-lib/core";
 import { Construct } from "constructs";
+import { loginAPI } from "./lambda/handler/auth/login";
 import { helloWorldAPI } from "./lambda/handler/hello-world";
 
 // Lambda のコンテナが立ち上がる際に HOST PC のパスを辿るため
@@ -82,7 +83,10 @@ export class LambdaStack extends Stack {
           "LoginFunction",
           "dist/lib/lambda/handler/auth/login.handler"
         )
-      )
+      ),
+      {
+        methodResponses: loginAPI.responses,
+      }
     );
 
     // GET /hello-world

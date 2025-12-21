@@ -1,3 +1,4 @@
+import { Model } from "aws-cdk-lib/aws-apigateway";
 import {
   APIGatewayProxyEvent,
   APIGatewayProxyResult,
@@ -43,4 +44,16 @@ export const handler: Handler = async (
       body: JSON.stringify({ message: "Unauthorized" }),
     };
   }
+};
+
+export const loginAPI = {
+  responses: [
+    {
+      statusCode: "200",
+      responseModels: {
+        "application/json": Model.EMPTY_MODEL,
+      },
+    },
+    { statusCode: "500" },
+  ],
 };
