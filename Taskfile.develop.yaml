@@ -1,0 +1,12 @@
+# https://taskfile.dev
+
+version: "3"
+
+tasks:
+  bash:
+    cmds:
+      - docker compose exec aws bash
+
+  watch:
+    cmds:
+      - docker compose exec aws npm run watch

@@ -1,0 +1,53 @@
+version: "3"
+
+includes:
+  develop:
+    taskfile: Taskfile.develop.yaml
+    flatten: true
+
+  helper:
+    taskfile: Taskfile.helper.yaml
+    flatten: true
+
+tasks:
+  setup-moto:
+    cmds:
+      - docker compose exec aws sh ./scripts/setup-moto.sh
+  
+  setup-users:
+    cmds:
+      - docker compose exec aws sh ./scripts/setup-users.sh
+
+  openapi:
+    cmds:
+      - sh ./openapi.sh
+
+  setup-all:
+    cmds:
+      - task: setup-moto
+      - task: setup-users
+
+  setenv:
+    cmds:
+      - sh ./setenv.sh
+
+  deploy:
+    cmds:
+      - docker compose exec aws sh ./scripts/deploy.sh
+
+  deploy-moto:
+    cmds:
+      - docker compose exec aws sh ./scripts/deploy-moto.sh
+
+  deploy-all:
+    cmds:
+      - task: deploy
+      - task: deploy-moto
+      - task: setenv
+      - task: openapi
+
+  init:
+    cmds:
+      - task: setup-moto
+      - task: deploy-all
+

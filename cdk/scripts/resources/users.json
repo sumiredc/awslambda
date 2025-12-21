@@ -1,0 +1,22 @@
+{
+  "user": [
+    {
+      "PutRequest": {
+        "Item": {
+          "id": { "S": "user001" },
+          "name": { "S": "One User" },
+          "email": { "S": "user1@example.com" }
+        }
+      }
+    },
+    {
+      "PutRequest": {
+        "Item": {
+          "id": { "S": "user002" },
+          "name": { "S": "Two User" },
+          "email": { "S": "user2@example.com" }
+        }
+      }
+    }
+  ]
+}
