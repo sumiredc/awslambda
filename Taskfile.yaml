@@ -22,11 +22,6 @@ tasks:
     cmds:
       - sh ./openapi.sh
 
-  setup-all:
-    cmds:
-      - task: setup-moto
-      - task: setup-users
-
   setenv:
     cmds:
       - sh ./setenv.sh
@@ -50,4 +45,5 @@ tasks:
     cmds:
       - task: setup-moto
       - task: deploy-all
+      - task: setup-users
 

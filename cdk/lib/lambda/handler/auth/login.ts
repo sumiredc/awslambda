@@ -7,25 +7,38 @@ import {
 import { CognitoIdentityServiceProvider } from "aws-sdk";
 import { CORS_HEADERS } from "lib/utils/cors";
 
-const USERNAME = "user";
-const PASSWORD = "Passw0rd+";
 const cognito = new CognitoIdentityServiceProvider({
   endpoint: process.env.COGNITO_ENDPOINT!,
 });
 
+export interface LoginRequest {
+  username: string;
+  password: string;
+}
+
 // パスワード認証
 // https://docs.aws.amazon.com/ja_jp/cognito/latest/developerguide/user-pool-lambda-challenge.html
 export const handler: Handler = async (
-  _: APIGatewayProxyEvent
+  event: APIGatewayProxyEvent
 ): Promise<APIGatewayProxyResult> => {
+  const request: LoginRequest = JSON.parse(event.body ?? "");
+
+  if (!request.username || !request.password) {
+    return {
+      statusCode: 400,
+      headers: { "Content-Type": "application/json", ...CORS_HEADERS },
+      body: JSON.stringify({ message: "Bad Request" }),
+    };
+  }
+
   try {
     const result = await cognito
       .initiateAuth({
         AuthFlow: "USER_PASSWORD_AUTH",
         ClientId: process.env.COGNITO_USER_POOL_CLIENT_ID!,
         AuthParameters: {
-          USERNAME,
-          PASSWORD,
+          USERNAME: request.username,
+          PASSWORD: request.password,
         },
       })
       .promise();
@@ -47,6 +60,10 @@ export const handler: Handler = async (
 };
 
 export const loginAPI = {
+  request: {
+    username: true,
+    password: true,
+  },
   responses: [
     {
       statusCode: "200",

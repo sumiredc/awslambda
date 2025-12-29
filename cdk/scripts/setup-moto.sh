@@ -2,9 +2,6 @@
 set -euo pipefail
 
 ENDPOINT_URL=http://motoserver:4000
-COGNITO_USER_NAME=user
-COGNITO_USER_EMAIL=user@example.com
-COGNITO_USER_PASSWORD=Passw0rd+
 LAMBDA_ROLE_NAME="moto-lambda-role"
 IAM_USER=admin-user
 
@@ -27,24 +24,6 @@ create_user_pool_client() {
         --user-pool-id ${USER_POOL_ID} \
         --output text \
         --query UserPoolClient.ClientId \
-        --endpoint-url ${ENDPOINT_URL}
-}
-
-create_admin_user() {
-    awslocal cognito-idp admin-create-user \
-        --user-pool-id ${USER_POOL_ID} \
-        --username ${COGNITO_USER_NAME} \
-        --user-attributes Name=email,Value=${COGNITO_USER_EMAIL} Name=email_verified,Value=true \
-        --message-action SUPPRESS \
-        --endpoint-url ${ENDPOINT_URL}
-}
-
-set_admin_user_password() {
-    awslocal cognito-idp admin-set-user-password \
-        --user-pool-id ${USER_POOL_ID} \
-        --username ${COGNITO_USER_NAME} \
-        --password ${COGNITO_USER_PASSWORD} \
-        --permanent \
         --endpoint-url ${ENDPOINT_URL}
 }
 
@@ -77,14 +56,6 @@ echo -e "✅️ ユーザープールを作成しました: ${USER_POOL_ID}\n"
 echo "🚀 ユーザープールクライアントを作成します..."
 CLIENT_ID=$(create_user_pool_client) || error_exit "ユーザープールクライアントの作成に失敗しました"
 echo -e "✅️ ユーザープールクライアントを作成しました: ${CLIENT_ID}\n"
-
-echo "🚀 Admin ユーザーを作成します..."
-create_admin_user
-echo -e "✅️ ユーザープールクライアントを作成しました:\n\t user:\t${COGNITO_USER_NAME}\n\t email:\t${COGNITO_USER_EMAIL}\n"
-
-echo "🚀 Admin ユーザーのパスワードを設定します..."
-set_admin_user_password
-echo -e "✅️ Admin ユーザーのパスワードを設定しました\n"
 
 echo "🚀 Lambda Trigger 用のロールを作成します..."
 ROLE_ARN=$(create_lambda_role) || error_exit "Lambda Trigger 用ロールの作成に失敗しました"

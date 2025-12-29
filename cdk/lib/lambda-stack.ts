@@ -85,6 +85,7 @@ export class LambdaStack extends Stack {
         )
       ),
       {
+        requestParameters: loginAPI.request,
         methodResponses: loginAPI.responses,
       }
     );
